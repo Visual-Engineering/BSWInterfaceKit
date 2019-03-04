@@ -22,10 +22,6 @@ public class ScrollableTabsViewController: UIViewController {
         }
     }
     
-    public var selectedIndex: Int {
-        return headerCollectionView.indexPathsForSelectedItems?.first?.item ?? 0
-    }
-    
     fileprivate var previousContentOffset = CGPoint(x: 0, y: 0)
     fileprivate var headerDataSource: HeaderDataSource!
     fileprivate var contentDataSource: ContentDataSource!
@@ -69,7 +65,7 @@ public class ScrollableTabsViewController: UIViewController {
         view.addAutolayoutSubview(contentCollectionView)
         
         NSLayoutConstraint.activate([
-            headerCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            headerCollectionView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor),
             headerCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             headerCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             headerCollectionView.heightAnchor.constraint(equalToConstant: Appearance.headerHeight),
@@ -79,7 +75,7 @@ public class ScrollableTabsViewController: UIViewController {
             contentCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             ])
         
-        reloadData()
+        self.reloadData()
         selectTab(at: 0)
     }
     
@@ -91,18 +87,9 @@ public class ScrollableTabsViewController: UIViewController {
     public override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         coordinator.animate(alongsideTransition: { (_) in
             self.headerCollectionView.collectionViewLayout.invalidateLayout()
-            self.contentCollectionView.collectionViewLayout.invalidateLayout()
-            self.selectTab(at: self.selectedIndex)
-        }, completion: nil)
-    }
-    
-    public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        guard isViewLoaded else { return }
-        coordinator.animate(alongsideTransition: { (_) in
+            self.headerCollectionView.reloadData()
             self.headerCollectionView.collectionViewLayout.invalidateLayout()
-            self.contentCollectionView.collectionViewLayout.invalidateLayout()
-            self.selectTab(at: self.selectedIndex)
+            self.contentCollectionView.reloadData()
         }, completion: nil)
     }
 }

@@ -7,12 +7,12 @@ import UIKit
 
 public class CollectionViewDataSource<Cell:ViewModelReusable & UICollectionViewCell>: NSObject, UICollectionViewDataSource {
     
-    public private(set) var data: [Cell.VM]
+    public fileprivate(set) var data: [Cell.VM]
     public weak var collectionView: UICollectionView!
     public var emptyConfiguration: ErrorView.Configuration?
+    fileprivate var emptyView: UIView?
     public let reorderSupport: CollectionViewReorderSupport<Cell.VM>?
-    private var emptyView: UIView?
-
+    
     public init(data: [Cell.VM] = [],
                 collectionView: UICollectionView,
                 emptyConfiguration: ErrorView.Configuration? = nil,
@@ -26,6 +26,7 @@ public class CollectionViewDataSource<Cell:ViewModelReusable & UICollectionViewC
 
         collectionView.registerReusableCell(Cell.self)
         collectionView.dataSource = self
+        collectionView.alwaysBounceVertical = true
         if let _ = self.reorderSupport {
             let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture))
             self.collectionView.addGestureRecognizer(longPressGesture)
@@ -131,13 +132,12 @@ public class CollectionViewDataSource<Cell:ViewModelReusable & UICollectionViewC
             for: indexPath
         )
         supplementaryViewSupport.configureHeader(supplementaryView)
-        supplementaryView.isHidden = (data.count == 0) && supplementaryViewSupport.shouldHideOnEmptyDataSet
         return supplementaryView
     }
     
     //MARK:- Private
     
-    private func addEmptyView() {
+    fileprivate func addEmptyView() {
         
         guard let emptyConfiguration = self.emptyConfiguration else {
             return
@@ -249,19 +249,17 @@ public struct CollectionViewSupplementaryViewSupport {
 
     public let kind: UICollectionView.SupplementaryViewKind
     public let configureHeader: ConfigureHeader
-    public let shouldHideOnEmptyDataSet: Bool
     public let supplementaryViewClass: UICollectionReusableView.Type
-
-    public init(supplementaryViewClass: UICollectionReusableView.Type, kind: UICollectionView.SupplementaryViewKind, shouldHideOnEmptyDataSet: Bool = false, configureHeader: @escaping ConfigureHeader) {
+    
+    public init(supplementaryViewClass: UICollectionReusableView.Type, kind: UICollectionView.SupplementaryViewKind, configureHeader: @escaping ConfigureHeader) {
         self.supplementaryViewClass = supplementaryViewClass
         self.kind = kind
-        self.shouldHideOnEmptyDataSet = shouldHideOnEmptyDataSet
         self.configureHeader = configureHeader
     }
 }
 
-private extension UICollectionView {
-     func performEditActions<T>(_ actions: [CollectionViewEditActionKind<T>]) {
+extension UICollectionView {
+    fileprivate func performEditActions<T>(_ actions: [CollectionViewEditActionKind<T>]) {
         performBatchUpdates({ 
             
             actions.forEach {

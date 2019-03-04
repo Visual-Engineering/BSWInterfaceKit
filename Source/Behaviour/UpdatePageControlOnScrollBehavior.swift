@@ -11,7 +11,7 @@ final public class UpdatePageControlOnScrollBehavior: NSObject {
     fileprivate let scrollingDirection: ScrollingDirection
     fileprivate var observation: NSKeyValueObservation!
 
-    public init(pageControl: UIPageControl, scrollingDirection: ScrollingDirection = .horizontal, scrollView: UIScrollView) {
+    init(pageControl: UIPageControl, scrollingDirection: ScrollingDirection = .horizontal, scrollView: UIScrollView) {
         self.pageControl = pageControl
         self.scrollingDirection = scrollingDirection
         super.init()
@@ -25,7 +25,7 @@ final public class UpdatePageControlOnScrollBehavior: NSObject {
         observation.invalidate()
     }
     
-    public enum ScrollingDirection {
+    enum ScrollingDirection {
         case horizontal, vertical
     }
 

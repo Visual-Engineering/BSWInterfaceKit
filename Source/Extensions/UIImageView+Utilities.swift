@@ -8,11 +8,11 @@ import Foundation
 
 extension UIImageView {
     
-    private struct AssociatedKeys {
+    fileprivate struct AssociatedKeys {
         static var BlurEffectViewKey = "BlurEffectViewKey"
     }
 
-    public var blurEffectView: UIVisualEffectView? {
+    var blurEffectView: UIVisualEffectView? {
         get {
             return objc_getAssociatedObject(self, &AssociatedKeys.BlurEffectViewKey) as? UIVisualEffectView
         }
@@ -29,7 +29,7 @@ extension UIImageView {
         }
     }
 
-    public func addBlurEffect() {
+    func addBlurEffect() {
         self.blurEffectView = {
             let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
             self.addSubview(effectView)
@@ -38,7 +38,7 @@ extension UIImageView {
         }()
     }
     
-    public func removeBlurEffect() {
+    func removeBlurEffect() {
         blurEffectView?.removeFromSuperview()
         blurEffectView = nil
     }

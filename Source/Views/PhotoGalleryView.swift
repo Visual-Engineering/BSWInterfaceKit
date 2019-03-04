@@ -111,9 +111,9 @@ final public class PhotoGalleryView: UIView {
 
         let bottomConstraint: NSLayoutConstraint = {
             if #available(iOS 11, *) {
-                return pageControl.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -4)
+                return pageControl.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -CGFloat(Stylesheet.margin(.small)))
             } else {
-                return pageControl.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4)
+                return pageControl.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -CGFloat(Stylesheet.margin(.small)))
             }
         }()
         NSLayoutConstraint.activate([

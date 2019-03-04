@@ -4,7 +4,7 @@
 //
 
 import UIKit
-import Nuke
+import SDWebImage
 
 public struct Photo {
     
@@ -24,10 +24,10 @@ public struct Photo {
         self.size = size
     }
 
-    public init(image: UIImage, averageColor: UIColor = UIColor.randomColor()) {
+    public init(image: UIImage, averageColor: UIColor = UIColor.randomColor(), size: CGSize? = nil) {
         self.kind = .image(image)
         self.averageColor = averageColor
-        self.size = image.size
+        self.size = size
     }
 
     public init(url: URL?, averageColor: UIColor = RandomColorFactory.randomColor(), size: CGSize? = nil) {
@@ -74,22 +74,11 @@ public extension Photo {
         case .image(let image):
             return image
         case .url(let url):
-            let imageCache = Nuke.ImageCache.shared //This dependency should be removed
-            guard let request = imageCache.cachedResponse(for: ImageRequest(url: url)) else {
+            let imageManager = SDWebImageManager.shared() //This dependency should be removed
+            guard let image = imageManager.imageCache?.imageFromCache(forKey: url.absoluteString) else {
                 return nil
             }
-            return request.image
-        }
-    }
-
-    var url: URL? {
-        switch self.kind {
-        case .empty:
-            return nil
-        case .image:
-            return nil
-        case .url(let url):
-            return url
+            return image
         }
     }
 }

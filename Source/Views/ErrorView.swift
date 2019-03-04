@@ -12,52 +12,33 @@ open class ErrorView: UIStackView {
         public let title: NSAttributedString
         public let message: NSAttributedString?
         public let image: UIImage?
-        public let button: UIButton?
+        public let buttonConfiguration: ButtonConfiguration?
         
         public init(title: NSAttributedString, message: NSAttributedString? = nil, image: UIImage? = nil, buttonConfiguration: ButtonConfiguration? = nil) {
             self.title = title
             self.message = message
             self.image = image
-            if let buttonConfiguration = buttonConfiguration {
-                self.button = UIButton(buttonConfiguration: buttonConfiguration)
-            } else {
-                self.button = nil
-            }
+            self.buttonConfiguration = buttonConfiguration
         }
-
-        public init(title: NSAttributedString, message: NSAttributedString? = nil, image: UIImage? = nil, button: UIButton? = nil) {
-            self.title = title
-            self.message = message
-            self.image = image
-            self.button = button
-        }
-
+        
         func viewRepresentation() -> UIView {
             return ErrorView(config: self)
         }
     }
-    
-    public enum Appereance {
-        static public var Spacing: CGFloat = 10
-    }
 
+    private enum Constants {
+        static let Spacing: CGFloat = 10
+    }
+    
     public convenience init(config: Configuration) {
-        self.init(title: config.title, message: config.message, image: config.image, button: config.button)
-    }
-
-    public convenience init(title: NSAttributedString, message: NSAttributedString? = nil, image: UIImage? = nil, buttonConfiguration: ButtonConfiguration? = nil) {
-        if let buttonConfiguration = buttonConfiguration {
-            self.init(title: title, message: message, image: image, button: UIButton(buttonConfiguration: buttonConfiguration))
-        } else {
-            self.init(title: title, message: message, image: image, button: nil)
-        }
+        self.init(title: config.title, message: config.message, image: config.image, buttonConfiguration: config.buttonConfiguration)
     }
     
-    public init(title: NSAttributedString, message: NSAttributedString? = nil, image: UIImage? = nil, button: UIButton? = nil) {
+    public init(title: NSAttributedString, message: NSAttributedString? = nil, image: UIImage? = nil, buttonConfiguration: ButtonConfiguration? = nil) {
         super.init(frame: .zero)
         axis = .vertical
         alignment = .center
-        spacing = Appereance.Spacing
+        spacing = Constants.Spacing
         
         if let image = image {
             let imageView = UIImageView(image: image)
@@ -78,7 +59,8 @@ open class ErrorView: UIStackView {
             addArrangedSubview(label)
         }
         
-        if let button = button {
+        if let buttonConfiguration = buttonConfiguration {
+            let button = UIButton(buttonConfiguration: buttonConfiguration)
             addArrangedSubview(button)
         }
     }

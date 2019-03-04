@@ -10,15 +10,8 @@ import Foundation
 
 extension Bundle {
     class func interfaceKitBundle() -> Bundle {
-        let frameworkBundle = Bundle.init(for: InterfaceKit.self)
-        if let url = Bundle.main.url(forResource: "BSWInterfaceKit", withExtension: "bundle"), let bundle = Bundle(url: url) {
-            return bundle
-        } else if let url = frameworkBundle.url(forResource: "BSWInterfaceKit", withExtension: "bundle"), let bundle = Bundle(url: url) {
-            return bundle
-        } else {
-            fatalError()
-        }
+        return Bundle.init(for: InterfaceKit.self)
     }
 }
 
-private class InterfaceKit: NSObject {}
+fileprivate class InterfaceKit: NSObject {}

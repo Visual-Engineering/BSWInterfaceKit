@@ -3,15 +3,13 @@
 //  Copyright © 2018 TheLeftBit SL. All rights reserved.
 //
 
+import SDWebImage
 import BSWFoundation
 import Deferred
-import Nuke
 
 public typealias BSWImageCompletionBlock = (Task<UIImage>.Result) -> Void
 
 extension UIImageView {
-
-    public static var fadeImageDuration: TimeInterval? = nil
 
     private static var webDownloadsEnabled = true
 
@@ -22,7 +20,7 @@ extension UIImageView {
 
     @objc(bsw_enableWebDownloads)
     static public func enableWebDownloads() {
-        webDownloadsEnabled = true
+        webDownloadsEnabled = false
     }
 
     @objc(bsw_setImageFromURLString:)
@@ -34,20 +32,16 @@ extension UIImageView {
 
     @objc(bsw_cancelImageLoadFromURL)
     public func cancelImageLoadFromURL() {
-        Nuke.cancelRequest(for: self)
+        sd_cancelCurrentImageLoad()
     }
 
     @nonobjc
     public func setImageWithURL(_ url: URL, completed completedBlock: BSWImageCompletionBlock? = nil) {
         guard UIImageView.webDownloadsEnabled else { return }
-        
-        let options = ImageLoadingOptions(
-            transition: (UIImageView.fadeImageDuration != nil) ? .fadeIn(duration: UIImageView.fadeImageDuration!) : nil
-        )
-        Nuke.loadImage(with: url, options: options, into: self) { (response, error) in
+        sd_setImage(with: url) { (image, error, _, _) in
 
             let result: Task<UIImage>.Result
-            if let image = response?.image {
+            if let image = image {
                 result = .success(image)
             } else if let error = error {
                 result = .failure(error)
@@ -68,6 +62,7 @@ extension UIImageView {
             backgroundColor = photo.averageColor
             setImageWithURL(url) { result in
                 guard result.error == nil else { return }
+                self.image = result.value
                 self.backgroundColor = nil
             }
         case .empty:
@@ -77,8 +72,7 @@ extension UIImageView {
     }
     
     public static func prefetchImagesAtURL(_ urls: [URL]) {
-        preheater.startPreheating(with: urls)
+        SDWebImagePrefetcher.shared().prefetchURLs(urls)
     }
 }
 
-private let preheater = Nuke.ImagePreheater(destination: .diskCache)

@@ -10,19 +10,13 @@ extension UIViewController {
     @objc(bsw_showErrorAlert:error:)
     public func showErrorAlert(_ message: String, error: Error) {
         
-        let errorMessage: String = {
-            #if DEBUG
-            if let localizedError = error as? LocalizedError, let description = localizedError.errorDescription {
-                return "\(message): \(description) \n\n Error code: \(error)"
-            } else {
-                return "\(message) \n\n Error code: \(error.localizedDescription)"
-            }
-            #else
-            return message
-            #endif
-        }()
+        #if DEBUG
+        let errorMessage = "\(message) \n\n Error code: \(error.localizedDescription)"
+        #else
+        let errorMessage = message
+        #endif
         
-        let operation = PresentAlertOperation(title: "error".localized, message: errorMessage, presentingViewController: self)
+        let operation = PresentAlertOperation(title: "Error", message: errorMessage, presentingViewController: self)
         errorQueue.addOperation(operation)
     }
     
@@ -37,25 +31,6 @@ extension UIViewController {
         guard let presentingVC = targetViewController(forAction: #selector(closeViewController(sender:)), sender: sender) else { return }
         presentingVC.closeViewController(sender: sender)
     }
-}
-
-//MARK: - Child VC
-
-extension UIViewController {
-    
-    public func containViewController(_ vc: UIViewController) {
-        addChild(vc)
-        view.addAutolayoutSubview(vc.view)
-        vc.view.pinToSuperview()
-        vc.willMove(toParent: self)
-    }
-    
-    public func removeContainedViewController(_ vc: UIViewController) {
-        vc.willMove(toParent: nil)
-        vc.view.removeFromSuperview()
-        vc.removeFromParent()
-    }
-    
 }
 
 extension UINavigationController {

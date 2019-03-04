@@ -71,39 +71,11 @@ public extension NSAttributedString {
             attachment.setImageWidth(width: width)
         })
     }
-    
-    func settingKern(_ kern: CGFloat) -> NSAttributedString {
-        let mutableCopy = self.mutableCopy() as! NSMutableAttributedString
-        mutableCopy.setKern(kern)
-        return mutableCopy
-    }
-    
-    func settingLineSpacing(_ lineSpacing: CGFloat, clipTail: Bool = false) -> NSAttributedString {
-        let mutableCopy = self.mutableCopy() as! NSMutableAttributedString
-        mutableCopy.setLineSpacing(lineSpacing, clipTail: clipTail)
-        return mutableCopy
-    }
-
 }
 
 private extension NSTextAttachment {
     func setImageWidth(width: CGFloat) {
         let ratio = bounds.size.width / bounds.size.height
         bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y, width: width, height: width / ratio)
-    }
-}
-
-public extension NSMutableAttributedString {
-    func setKern(_ kern: CGFloat) {
-        self.addAttributes([.kern: kern], range: NSRange(location: 0, length: self.length))
-    }
-    
-    func setLineSpacing(_ lineSpacing: CGFloat, clipTail: Bool = false) {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = lineSpacing
-        if clipTail {
-            paragraphStyle.lineBreakMode = .byTruncatingTail
-        }
-        self.addAttributes([.paragraphStyle: paragraphStyle], range: NSRange(location: 0, length: self.length))
     }
 }

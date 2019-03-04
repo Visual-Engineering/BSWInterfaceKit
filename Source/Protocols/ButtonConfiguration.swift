@@ -9,7 +9,6 @@ import ObjectiveC
 public enum ButtonTitle {
     case text(NSAttributedString)
     case image(UIImage)
-    case textAndImage(NSAttributedString, UIImage)
 }
 
 public typealias ButtonActionHandler = () -> ()
@@ -70,11 +69,6 @@ extension UIButton {
             setImage(image, for: .normal)
             imageView?.contentMode = .scaleAspectFit
             imageEdgeInsets = UIEdgeInsets(uniform: -5)
-        case let .textAndImage(title, image):
-            setImage(image, for: .normal)
-            imageView?.contentMode = .scaleAspectFit
-            imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
-            setAttributedTitle(title, for: .normal)
         }
         
         backgroundColor = buttonConfiguration.backgroundColor
