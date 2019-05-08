@@ -109,7 +109,7 @@ public class ScrollableTabsViewController: UIViewController {
 
 extension ScrollableTabsViewController: ScrollableTabHeaderSelectionDelegate, ScrollableTabContentSelectionDelegate {
     
-    func selectTab(at index: Int, animated: Bool = true) {
+    public func selectTab(at index: Int, animated: Bool = true) {
         guard self.viewControllers.count > index && index >= 0 else { return }
         selectTabTitle(at: index, animated: animated)
         selectTabContent(at: index, animated: animated)
