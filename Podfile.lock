@@ -1,14 +1,14 @@
 PODS:
-  - BNRDeferred (3.3.2)
-  - BSWFoundation (2.2.1):
-    - BNRDeferred (= 3.3.2)
-    - KeychainAccess (~> 3.1.0)
-  - BSWInterfaceKit (1.0.0):
-    - BSWFoundation (~> 2.2.0)
-    - Nuke (~> 7.5.1)
-  - KeychainAccess (3.1.2)
-  - Nuke (7.5.1)
-  - SnapshotTesting (1.1.0)
+  - BNRDeferred (4.0.0)
+  - BSWFoundation (2.4.0):
+    - BNRDeferred (~> 4.0.0)
+    - KeychainAccess (~> 3.2.0)
+  - BSWInterfaceKit (2.0.0):
+    - BSWFoundation (~> 2.4.0)
+    - Nuke (~> 7.6)
+  - KeychainAccess (3.2.0)
+  - Nuke (7.6)
+  - SnapshotTesting (1.5.0)
 
 DEPENDENCIES:
   - BSWInterfaceKit (from `./BSWInterfaceKit.podspec`)
@@ -27,12 +27,12 @@ EXTERNAL SOURCES:
     :path: "./BSWInterfaceKit.podspec"
 
 SPEC CHECKSUMS:
-  BNRDeferred: 85f3a78f73f9af049a398aabe282435b89f9f3c3
-  BSWFoundation: ae944c1095d926462ba69a4553ce904e3ab7f69a
-  BSWInterfaceKit: 1b24d08022be7c0087021266a880af6c8fefd15e
-  KeychainAccess: b3816fddcf28aa29d94b10ec305cd52be14c472b
-  Nuke: 3814db501e55f17951451839c726ffd91641e9a5
-  SnapshotTesting: 8ed6a4dceee63f59a60e1bc86f9adbba54eb9287
+  BNRDeferred: 2dd593c7452ca3aad1a8106c38c84866e02dbc15
+  BSWFoundation: 157ea4dcfcdd6018f557a2dfaa28447c46e144b3
+  BSWInterfaceKit: 91034b0b73111873cda99dea354e39aa9a061616
+  KeychainAccess: 3b1bf8a77eb4c6ea1ce9404c292e48f948954c6b
+  Nuke: aa1c6a5919b543debe814530881f2fccb58c26d4
+  SnapshotTesting: 9ca1d80f6322509a035856170c11d0571b1f7171
 
 PODFILE CHECKSUM: 6508f2c1934b65692851a6a5b383a01c0e290921
 

@@ -9,22 +9,20 @@ import UIKit
 @available(iOS 11.0, *)
 open class ColumnFlowLayout: UICollectionViewLayout {
     
-    // These are used to work around a bug on iOS 11 and lower
-    // were dequeing a cell will invalidate the collectionView's
-    // layout, causing a Stack Overflow when called during `prepare`.
-    // If you must support older OS versions, please return a
-    // cell created without dequeing and configured for the given
-    // indexPath to workaround this issue. For iOS 12 and higher,
-    // these methods won't be called and will rely on cell dequeing.
-    // Reference: https://i.imgur.com/eNdUbmn.jpg
+    // These are used to create a factory cell to calculate the size.
+    // of the scrollable content of the collectionView. Please return
+    // a configured cell for the given index path without using
+    // dequeueCell like this:
+    // https://i.imgur.com/LxYrTZB.png https://i.imgur.com/TCwbLeC.png
     public typealias CellFactory = (IndexPath) -> UICollectionViewCell
-    public typealias HeaderFactory = (IndexPath) -> UICollectionReusableView?
+    public typealias HeaderFooterFactory = (IndexPath) -> UICollectionReusableView?
 
-    @available(iOS, deprecated:12.0, message:"Not neccesary anymore")
     open var cellFactory: CellFactory!
 
-    @available(iOS, deprecated:12.0, message:"Not neccesary anymore")
-    open var headerFactory: HeaderFactory = { _ in
+    open var headerFactory: HeaderFooterFactory = { _ in
+        return nil
+    }
+    open var footerFactory: HeaderFooterFactory = { _ in
         return nil
     }
 
@@ -40,6 +38,12 @@ open class ColumnFlowLayout: UICollectionViewLayout {
     }
     
     open var showsHeader: Bool = false {
+        didSet {
+            invalidateLayout()
+        }
+    }
+
+    open var showsFooter: Bool = false {
         didSet {
             invalidateLayout()
         }
@@ -67,7 +71,7 @@ open class ColumnFlowLayout: UICollectionViewLayout {
     
     override open func prepare() {
         super.prepare()
-        guard let cv = collectionView, let dataSource = cv.dataSource else { return }
+        guard let cv = collectionView else { return }
         guard cache.isEmpty else { return }
         // Figure out how many columns we can fit
         let maxNumColumns = Int(availableWidth / minColumnWidth)
@@ -102,11 +106,7 @@ open class ColumnFlowLayout: UICollectionViewLayout {
             guard showsHeader else {
                 return nil
             }
-            if #available(iOS 12, *) {
-                return dataSource.collectionView?(cv, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: headerIndexPath)
-            } else {
-                return self.headerFactory(headerIndexPath)
-            }
+            return self.headerFactory(headerIndexPath)
         }()
         
         if let header = _header {
@@ -127,32 +127,42 @@ open class ColumnFlowLayout: UICollectionViewLayout {
             
             let indexPath = IndexPath(item: item, section: 0)
             
-            // Check ColumnFlowLayoutFactoryDataSource for reference
-            let _cell: UICollectionViewCell? = {
-                if #available(iOS 12, *) {
-                    return dataSource.collectionView(cv, cellForItemAt: indexPath)
-                } else {
-                    return self.cellFactory(indexPath)
-                }
+            let cell = self.cellFactory(indexPath)
+            let cellFrame: CGRect = {
+                // Automatically calculate the height of the cell using Autolayout
+                let height = ColumnFlowLayout.cellHeight(cell: cell, availableWidth: cellWidth)
+                let frame = CGRect(x: xOffset[currentColumn], y: yOffset[currentColumn], width: cellWidth, height: height)
+                let isFirstCellInColumn = (yOffset[currentColumn] == yStartOffset)
+                return frame.offsetBy(dx: 0, dy: isFirstCellInColumn ? 0 : itemSpacing)
             }()
-            guard let cell = _cell else { fatalError() }
             
-            // Automatically calculate the height of the cell using Autolayout
-            let height = ColumnFlowLayout.cellHeight(cell: cell, availableWidth: cellWidth)
-            let frame = CGRect(x: xOffset[currentColumn], y: yOffset[currentColumn], width: cellWidth, height: height)
-            let isFirstCellInColumn = (yOffset[currentColumn] == yStartOffset)
-            let insetFrame = frame.offsetBy(dx: 0, dy: isFirstCellInColumn ? 0 : itemSpacing)
             let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
-            attributes.frame = insetFrame
+            attributes.frame = cellFrame
             cache.append(attributes)
             
             // Do some book-keeping to make sure the next
             // iteration uses the updated values
-            contentHeight = max(contentHeight, insetFrame.maxY)
-            yOffset[currentColumn] = insetFrame.maxY
+            contentHeight = max(contentHeight, cellFrame.maxY)
+            yOffset[currentColumn] = cellFrame.maxY
             currentColumn = currentColumn < (numberOfColumns - 1) ? (currentColumn + 1) : 0
         }
         
+        let _footer: UICollectionReusableView? = {
+            guard showsFooter else {
+                return nil
+            }
+            return self.footerFactory(headerIndexPath)
+        }()
+        
+        if let footer = _footer {
+            let footerWidth = cv.frame.width
+            let height = ColumnFlowLayout.reusableViewHeight(view: footer, availableWidth: footerWidth)
+            let attributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, with: headerIndexPath)
+            attributes.frame = CGRect(x: 0, y: cache.last?.frame.maxY ?? 0, width: footerWidth, height: height)
+            cache.append(attributes)
+            contentHeight += height
+        }
+
         contentHeight += cv.layoutMargins.bottom
     }
     

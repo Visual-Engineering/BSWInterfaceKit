@@ -87,9 +87,7 @@ final public class PhotoGalleryView: UIView {
         )
         collectionView.dataSource = collectionViewDataSource
         collectionView.delegate = self
-        if #available(iOS 10.0, *) {
-            collectionView.prefetchDataSource = self
-        }
+        collectionView.prefetchDataSource = self
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.alwaysBounceVertical = false
         collectionViewLayout.scrollDirection = .horizontal
@@ -150,7 +148,7 @@ extension PhotoGalleryView: UICollectionViewDataSourcePrefetching {
             .compactMap({ self.collectionViewDataSource.data[safe: $0.item] })
             .compactMap({
                 switch $0.kind {
-                case .url(let url):
+                case .url(let url, _):
                     return url
                 default:
                     return nil

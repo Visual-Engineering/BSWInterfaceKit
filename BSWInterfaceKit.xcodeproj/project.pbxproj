@@ -26,7 +26,9 @@
 		F53E036E2122DE49004C5E13 /* ScrollableTabsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53E036D2122DE49004C5E13 /* ScrollableTabsViewControllerTests.swift */; };
 		F54886DC203ED769005191D3 /* FacebookLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54886DB203ED769005191D3 /* FacebookLoginViewController.swift */; };
 		F56D522320F767130008D67C /* AvatarViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F56D522220F767130008D67C /* AvatarViewTests.swift */; };
+		F57ABCD6224D15B000258BAE /* HorizontalPagedCollectionViewLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F57ABCD5224D15B000258BAE /* HorizontalPagedCollectionViewLayoutTests.swift */; };
 		F5BC58882199CBCB00493461 /* ColumnFlowLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BC58872199CBCB00493461 /* ColumnFlowLayoutTests.swift */; };
+		F5D37D1F2289BDE60051EA82 /* NSAttributedStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D37D1E2289BDE60051EA82 /* NSAttributedStringTests.swift */; };
 		F5F8BD69222FCDA400CCCE43 /* AlertOperationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F8BD68222FCDA400CCCE43 /* AlertOperationViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -71,7 +73,9 @@
 		F53E036D2122DE49004C5E13 /* ScrollableTabsViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableTabsViewControllerTests.swift; sourceTree = "<group>"; };
 		F54886DB203ED769005191D3 /* FacebookLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookLoginViewController.swift; sourceTree = "<group>"; };
 		F56D522220F767130008D67C /* AvatarViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarViewTests.swift; sourceTree = "<group>"; };
+		F57ABCD5224D15B000258BAE /* HorizontalPagedCollectionViewLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalPagedCollectionViewLayoutTests.swift; sourceTree = "<group>"; };
 		F5BC58872199CBCB00493461 /* ColumnFlowLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnFlowLayoutTests.swift; sourceTree = "<group>"; };
+		F5D37D1E2289BDE60051EA82 /* NSAttributedStringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAttributedStringTests.swift; sourceTree = "<group>"; };
 		F5F8BD68222FCDA400CCCE43 /* AlertOperationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertOperationViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -161,6 +165,8 @@
 				EB55C3AD1EF534120029E735 /* TextStylerTests.swift */,
 				EB3B03591E9CD9AD009E6F80 /* UIViewControllerTests.swift */,
 				EB0B24251E81B2BF005491F1 /* UIViewTests.swift */,
+				F57ABCD5224D15B000258BAE /* HorizontalPagedCollectionViewLayoutTests.swift */,
+				F5D37D1E2289BDE60051EA82 /* NSAttributedStringTests.swift */,
 			);
 			name = Suite;
 			sourceTree = "<group>";
@@ -262,6 +268,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -408,6 +415,7 @@
 				EB55C3AE1EF534120029E735 /* TextStylerTests.swift in Sources */,
 				EB81EADE1E81BE7C008A0852 /* ProfilePhotoPickerCollectionViewTests.swift in Sources */,
 				EBD6D20D1E50E43800D4CBFA /* BSWSnapshotTest.swift in Sources */,
+				F57ABCD6224D15B000258BAE /* HorizontalPagedCollectionViewLayoutTests.swift in Sources */,
 				F56D522320F767130008D67C /* AvatarViewTests.swift in Sources */,
 				EBB3CECD1E50C60B0063303C /* ClassicProfileViewControllerTests.swift in Sources */,
 				EB3B035A1E9CD9AD009E6F80 /* UIViewControllerTests.swift in Sources */,
@@ -415,6 +423,7 @@
 				F5BC58882199CBCB00493461 /* ColumnFlowLayoutTests.swift in Sources */,
 				EB067A1C1E806A8300A8AC91 /* ButtonTests.swift in Sources */,
 				F53E036E2122DE49004C5E13 /* ScrollableTabsViewControllerTests.swift in Sources */,
+				F5D37D1F2289BDE60051EA82 /* NSAttributedStringTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,6 +497,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -532,6 +542,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -561,7 +572,6 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -591,7 +601,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -621,7 +630,6 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BSWInterfaceKitDemo.app/BSWInterfaceKitDemo";
 			};
 			name = Debug;
@@ -651,7 +659,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BSWInterfaceKitDemo.app/BSWInterfaceKitDemo";
 			};
 			name = Release;

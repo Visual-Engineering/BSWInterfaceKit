@@ -5,26 +5,14 @@
 import BSWInterfaceKit
 import BSWFoundation
 
-enum FruitError: Error {
-    case unknownError
-}
-
-@available(iOS 11.0, *)
 class AzzurriViewController: UIViewController {
 
     var dataSource: CollectionViewDataSource<PolaroidCollectionViewCell>!
     var collectionView: UICollectionView!
+    private var fetchCount: Int = 0
 
-    init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func loadView() {
+        view = UIView()
         view.backgroundColor = .groupTableViewBackground
         
         let columnLayout = ColumnFlowLayout()
@@ -42,21 +30,27 @@ class AzzurriViewController: UIViewController {
         collectionView.backgroundColor = .groupTableViewBackground
         collectionView.alwaysBounceVertical = true
         
-        let retryButton = ButtonConfiguration(buttonTitle: .text(NSAttributedString(string: "Retry"))) {
-            print("Retry")
-        }
-        let emptyConfiguration = ErrorView.Configuration(title: NSAttributedString(string: "No more players"), buttonConfiguration: retryButton)
-        dataSource.emptyConfiguration = emptyConfiguration
+        dataSource.emptyConfiguration = {
+            let retryButton = ButtonConfiguration(buttonTitle: .text(NSAttributedString(string: "Retry"))) {
+                print("Retry")
+            }
+            return ErrorView.Configuration(title: NSAttributedString(string: "No more players"), buttonConfiguration: retryButton)
+        }()
         
-        setEditing(false, animated: true)
-
-        self.showLoader()
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) {
-            self.hideLoader()
-            self.dataSource.updateData(AzzurriViewController.mockData())
-        }
-
+        dataSource.infiniteScrollSupport = .init(fetchHandler: { [weak self] (handler) in
+            self?.fetchNextPage(handler: handler)
+        })
     }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, actionHandler: { [weak self] in
+            guard let `self` = self else { return }
+            self.setEditing(true, animated: true)
+        })
+        fetchData(animated: false)
+    }
+    
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
@@ -74,8 +68,8 @@ class AzzurriViewController: UIViewController {
             })
 
             collectionView.visibleCells.forEach { cell in
-                cell.isDeleting = true
-                cell.onDelete = { [weak cell, weak self] in
+                cell.bsw_isDeleting = true
+                cell.bsw_onDelete = { [weak cell, weak self] in
                     guard let `cell` = cell else { return }
                     guard let index = self?.collectionView.indexPath(for: cell) else { return }
                     self?.removeItemAtIndexPath(index)
@@ -90,12 +84,20 @@ class AzzurriViewController: UIViewController {
             })
 
             collectionView.visibleCells.forEach {
-                $0.isDeleting = false
-                $0.onDelete = nil
+                $0.bsw_isDeleting = false
+                $0.bsw_onDelete = nil
             }
         }
     }
 
+    func fetchData(animated: Bool) {
+        self.showLoader(animated: animated)
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(1000)) {
+            self.hideLoader()
+            self.dataSource.updateData(AzzurriViewController.mockData())
+        }
+    }
+    
     func removeItemAtIndexPath(_ indexPath: IndexPath) {
         dataSource.performEditActions([.remove(fromIndexPath: indexPath)])
     }
@@ -146,5 +148,11 @@ extension AzzurriViewController {
         }
         cell.configureFor(viewModel: vm)
         return cell
+    }
+
+    private func fetchNextPage(handler: @escaping (CollectionViewInfiniteScrollSupport<PolaroidCollectionViewCell.VM>.FetchResult) -> ()) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) {
+            handler(.init(newDataAvailable: AzzurriViewController.mockData(), shouldKeepPaging: true))
+        }
     }
 }

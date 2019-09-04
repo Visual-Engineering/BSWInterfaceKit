@@ -6,10 +6,10 @@
 import UIKit
 import Nuke
 
-public struct Photo {
+public struct Photo: Equatable {
     
-    public enum Kind {
-        case url(Foundation.URL)
+    public enum Kind: Equatable {
+        case url(Foundation.URL, placeholderImage: PlaceholderImage?)
         case image(UIImage)
         case empty
     }
@@ -17,27 +17,31 @@ public struct Photo {
     public let kind: Kind
     public let averageColor: UIColor
     public let size: CGSize?
+    public let preferredContentMode: UIView.ContentMode?
 
-    public init(kind: Kind, averageColor: UIColor = UIColor.randomColor(), size: CGSize? = nil) {
+    public init(kind: Kind, averageColor: UIColor = UIColor.randomColor(), size: CGSize? = nil, preferredContentMode: UIView.ContentMode? = nil) {
         self.kind = kind
         self.averageColor = averageColor
+        self.preferredContentMode = preferredContentMode
         self.size = size
     }
 
-    public init(image: UIImage, averageColor: UIColor = UIColor.randomColor()) {
+    public init(image: UIImage, averageColor: UIColor = UIColor.randomColor(), preferredContentMode: UIView.ContentMode? = nil) {
         self.kind = .image(image)
         self.averageColor = averageColor
+        self.preferredContentMode = preferredContentMode
         self.size = image.size
     }
 
-    public init(url: URL?, averageColor: UIColor = RandomColorFactory.randomColor(), size: CGSize? = nil) {
-        self.kind = (url == nil) ? .empty : .url(url!)
+    public init(url: URL?, averageColor: UIColor = UIColor.randomColor(), placeholderImage: PlaceholderImage? = nil, size: CGSize? = nil, preferredContentMode: UIView.ContentMode? = nil) {
+        self.kind = (url == nil) ? .empty : .url(url!, placeholderImage: placeholderImage)
         self.averageColor = averageColor
+        self.preferredContentMode = preferredContentMode
         self.size = size
     }
     
     public static func emptyPhoto() -> Photo {
-        return Photo(kind: .empty, averageColor: RandomColorFactory.randomColor(), size: nil)
+        return Photo(kind: .empty, averageColor: UIColor.randomColor(), size: nil)
     }
 }
 
@@ -73,7 +77,7 @@ public extension Photo {
             return nil
         case .image(let image):
             return image
-        case .url(let url):
+        case .url(let url, _):
             let imageCache = Nuke.ImageCache.shared //This dependency should be removed
             guard let request = imageCache.cachedResponse(for: ImageRequest(url: url)) else {
                 return nil
@@ -88,8 +92,19 @@ public extension Photo {
             return nil
         case .image:
             return nil
-        case .url(let url):
+        case .url(let url, _):
             return url
+        }
+    }
+}
+
+public extension Photo {
+    struct PlaceholderImage: Equatable {
+        public let image: UIImage
+        public let preferredContentMode: UIView.ContentMode
+        public init(image: UIImage, preferredContentMode: UIView.ContentMode) {
+            self.image = image
+            self.preferredContentMode = preferredContentMode
         }
     }
 }
